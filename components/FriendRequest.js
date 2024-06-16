@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useContext, useEffect } from "react";
 import { UserType } from "../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import images from './photoStickers'
 
 const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
   //const { userId, setUserId } = useContext(UserType);
@@ -13,6 +14,8 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
     }
     console.log("FriendRequest item:", item);
   }, [userId, item]);
+  console.log("item = ", item);
+  console.log(item.image);
   const navigation = useNavigation();
   const acceptRequest = async (friendRequestId) => {
     try {
@@ -53,7 +56,7 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
     >
       <Image
         style={{ width: 50, height: 50, borderRadius: 25 }}
-        source={{ uri: item.image }}
+        source={images[item.image]}
       />
 
       <Text

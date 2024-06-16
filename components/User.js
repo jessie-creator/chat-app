@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import axios from 'axios';
 import { UserType } from "../context/UserContext";
+import images from './photoStickers'
 
 const User = ({ item, userFriends }) => {
   const { userId } = useContext(UserType);
@@ -49,7 +50,7 @@ const User = ({ item, userFriends }) => {
             borderRadius: 25,
             resizeMode: "cover",
           }}
-          source={{ uri: item.image }}
+          source={images[item.image]}
         />
       </View>
       <View style={{ marginLeft: 12, flex: 1 }}>
