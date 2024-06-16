@@ -7,7 +7,9 @@ import { useNavigation } from "@react-navigation/native";
 import { UserType } from "../../context/UserContext";
 import images from '../../context/imageContext';
 
+
 export default function CreateGroup() {
+    const API_BASE = process.env.HOST_NAME;
     const { userId, setUserId } = useContext(UserType);
     const [avatar, setAvatar] = useState("");
     const [name, setName] = useState("");
@@ -19,7 +21,7 @@ export default function CreateGroup() {
     const fetchUserInfo = async () => {
         try {
             const response = await fetch(
-                `http://172.29.148.167:8000/UserInfo/${userId}`
+                `${API_BASE}UserInfo/${userId}`
             );
 
             const data = await response.json();

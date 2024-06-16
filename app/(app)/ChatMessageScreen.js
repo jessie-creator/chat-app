@@ -13,6 +13,22 @@ import EmojiSelector from "react-native-emoji-selector";
 import { UserType } from "../../context/UserContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+import { useAuth } from "../../context/authContext";
+const OPTIONS = [
+    require('../../assets/images/photo-stickers/1.png'),
+    require('../../assets/images/photo-stickers/2.png'),
+    require('../../assets/images/photo-stickers/3.png'),
+    require('../../assets/images/photo-stickers/4.png'),
+    require('../../assets/images/photo-stickers/5.png'),
+    require('../../assets/images/photo-stickers/6.png'),
+    require('../../assets/images/photo-stickers/7.png'),
+    require('../../assets/images/photo-stickers/8.png'),
+    require('../../assets/images/photo-stickers/9.png'),
+    require('../../assets/images/photo-stickers/10.png'),
+    require('../../assets/images/photo-stickers/11.png'),
+    require('../../assets/images/photo-stickers/12.png')
+  ];
+
 
 export default ChatMessagesScreen = () => {
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
@@ -26,6 +42,9 @@ export default ChatMessagesScreen = () => {
     const { recepientId } = route.params;
     const [message, setMessage] = useState("");
     const { userId, setUserId } = useContext(UserType);
+    const API_BASE = 'https://chatapp.ebg.tw/';
+    const {user} = useAuth();
+    const profileURL = user.profileURL;
 
     const scrollViewRef = useRef(null);
 
@@ -55,7 +74,7 @@ export default ChatMessagesScreen = () => {
             const response = await fetch(
                 //`http://172.29.148.167:8000/messages/${userId}/${recepientId}`
                 //`http://172.29.148.167:8000/messages/${recepientId}`
-                `http://172.29.148.167:8000/messages/${userId}/${recepientId}`
+                `${API_BASE}messages/${userId}/${recepientId}`
             );
             const data = await response.json();
             if (response.ok) {
@@ -68,8 +87,17 @@ export default ChatMessagesScreen = () => {
             console.log("error fetching messages", error);
         }
     };
+    /*
     useEffect(() => {
         fetchMessages();
+    }, []);
+    */
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            fetchMessages();
+        }, 1000); // 延迟1秒
+
+        return () => clearTimeout(timeoutId); // 清除timeout
     }, []);
     
     useEffect(() => {
@@ -78,7 +106,7 @@ export default ChatMessagesScreen = () => {
                 // recepientId = chatRoom._id
                 console.log("RecepitentId = ", recepientId);
                 const response = await fetch(
-                    `http://172.29.148.167:8000/user/${recepientId}`
+                    `${API_BASE}user/${recepientId}`
                 );
                 
                 const data = await response.json();
@@ -110,7 +138,7 @@ export default ChatMessagesScreen = () => {
                 formData.append("messageText", message);
             }
 
-            const response = await fetch("http://172.29.148.167:8000/messages", {
+            const response = await fetch(`${API_BASE}messages`, {
                 method: "POST",
                 body: formData,
             });
@@ -154,7 +182,7 @@ export default ChatMessagesScreen = () => {
                                     borderRadius: 15,
                                     resizeMode: "cover",
                                 }}
-                                source={{ uri: recepientData?.image }}
+                                source={OPTIONS[profileURL-1]}
                             />
 
                             <Text style={{ marginLeft: 5, fontSize: 15, fontWeight: "bold" }}>
@@ -183,7 +211,7 @@ export default ChatMessagesScreen = () => {
 
     const deleteMessages = async (messageIds) => {
         try {
-            const response = await fetch("http://172.29.148.167:8000/deleteMessages", {
+            const response = await fetch(`${API_BASE}deleteMessages`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -224,6 +252,7 @@ export default ChatMessagesScreen = () => {
     const handleSelectMessage = (message) => {
         //check if the message is already selected
         const isSelected = selectedMessages.includes(message._id);
+        //console.log('Handle Select Message: ', message)
 
         if (isSelected) {
             setSelectedMessages((previousMessages) =>
@@ -247,7 +276,7 @@ export default ChatMessagesScreen = () => {
                                 onLongPress={() => handleSelectMessage(item)}
                                 key={index}
                                 style={[
-                                    item?.senderId?._id === userId
+                                    item?.senderId?.uid === userId
                                         ? {
                                             alignSelf: "flex-end",
                                             backgroundColor: "#DCF8C6",

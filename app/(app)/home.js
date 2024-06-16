@@ -24,17 +24,19 @@ export default function Home() {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
 
   const { userId } = useContext(UserType);
+  const API_BASE = 'https://chatapp.ebg.tw/';
 
+  /*
   useEffect(() => {
     const acceptedFriendsList = async () => {
       try {
         console.log("chatroom uid = ",userId)
         const response = await fetch(
           //`http://172.29.148.167:8000/accepted-friends/${userId}`
-          `http://172.29.148.167:8000/chatrooms/${userId}`
+          `${API_BASE}chatrooms/${userId}`
         );
         const data = await response.json();
-        console.log(data)
+        console.log('Data: ',data)
         if (response.ok) {
           setAcceptedFriends(data);
         }
@@ -42,9 +44,37 @@ export default function Home() {
         console.log("error showing the accepted friends", error);
       }
     };
+    console.log('acceptFriend Len: ', acceptedFriends.length);
     acceptedFriendsList();
 
-  }, [user]);
+  }, [user]);*/
+  useEffect(() => {
+    const acceptedFriendsList = async () => {
+      try {
+        console.log("chatroom uid = ", userId);
+        const response = await fetch(
+          //`http://172.29.148.167:8000/accepted-friends/${userId}`
+          `${API_BASE}chatrooms/${userId}`
+        );
+        const data = await response.json();
+        console.log('Data: ', data);
+        if (response.ok) {
+          setAcceptedFriends(data);
+        }
+      } catch (error) {
+        console.log("error showing the accepted friends", error);
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      console.log('acceptFriend Len: ', acceptedFriends.length);
+      acceptedFriendsList();
+    }, 5000); // 每五秒刷新一次
+
+    // 清除定时器
+    return () => clearInterval(intervalId);
+  }, [userId]);
+
   return (
     <View className="flex-1 bg-white">
       {/*<Text>Home</Text>
@@ -53,6 +83,7 @@ export default function Home() {
       </Pressable>*/}
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="light" />
+        
         {acceptedFriends.length > 0 ? (
           <View>
             {acceptedFriends.map((item, index) => (

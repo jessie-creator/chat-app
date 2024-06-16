@@ -5,11 +5,13 @@ import { UserType } from "../context/UserContext";
 import { useRouter } from 'expo-router'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+
 const UserChat = ({ item, noBorder }) => {
   const { userId, setUserId } = useContext(UserType);
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
   const router = useRouter();
+  const API_BASE = 'https://chatapp.ebg.tw/'
   const openChatRoom = ()=>{
     router.push({pathname: '/ChatMessageScreen', params: item._id});
 }
@@ -17,7 +19,7 @@ const UserChat = ({ item, noBorder }) => {
     try {
       const response = await fetch(
         //`http://172.29.148.167:8000/messages/${userId}/${item._id}`
-        `http://172.29.148.167:8000/messages/${userId}/${item._id}`
+        `${API_BASE}messages/${userId}/${item._id}`
       );
       const data = await response.json();
 

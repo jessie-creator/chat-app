@@ -4,10 +4,12 @@ import axios from 'axios';
 import { UserType } from "../context/UserContext";
 import images from './photoStickers'
 
+
 const User = ({ item, userFriends }) => {
   const { userId } = useContext(UserType);
   const [requestSent, setRequestSent] = useState(false);
   const [friendRequests, setFriendRequests] = useState([]);
+  const API_BASE = 'https://chatapp.ebg.tw/';
 
   useEffect(() => {
     fetchFriendRequests();
@@ -15,7 +17,7 @@ const User = ({ item, userFriends }) => {
 
   const fetchFriendRequests = async () => {
     try {
-      const response = await axios.get(`http://172.29.148.167:8000/friend-requests/sent/${userId}`);
+      const response = await axios.get(`${API_BASE}friend-requests/sent/${userId}`);
       if (response.status === 200) {
         setFriendRequests(response.data);
       }
@@ -27,7 +29,7 @@ const User = ({ item, userFriends }) => {
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
       console.log(currentUserId, selectedUserId);
-      const response = await axios.post("http://172.29.148.167:8000/friend-request", {
+      const response = await axios.post(`${API_BASE}friend-request`, {
         currentUserId,
         selectedUserId
       });

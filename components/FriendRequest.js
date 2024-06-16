@@ -4,9 +4,11 @@ import { UserType } from "../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import images from './photoStickers'
 
+
 const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
   //const { userId, setUserId } = useContext(UserType);
   const { userId } = useContext(UserType);
+  const API_BASE = 'https://chatapp.ebg.tw/'
   console.log(item)
   useEffect(() => {
     if (userId) {
@@ -22,7 +24,7 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
       console.log(item.uid, userId)
       console.log(friendRequestId)
       const response = await fetch(
-        "http://172.29.148.167:8000/friend-request/accept",
+        `${API_BASE}friend-request/accept`,
         {
           method: "POST",
           headers: {

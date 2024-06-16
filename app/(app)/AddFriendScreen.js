@@ -8,6 +8,7 @@ import { UserType } from "../../context/UserContext";
 import User from '../../components/User';
 import FriendRequest from '../../components/FriendRequest';
 
+
 export default function AddFriend() {
     const [search, setSearch] = useState("");
     const [tab, setTab] = useState("invitations");
@@ -15,6 +16,7 @@ export default function AddFriend() {
     const [friendRequests, setFriendRequests] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [userFriends, setUserFriends] = useState([]);
+    const API_BASE = 'https://chatapp.ebg.tw/';
     useEffect(() => {
         if (userId) {
             console.log("Fetching data with userId: ", userId);
@@ -33,7 +35,7 @@ export default function AddFriend() {
     const fetchFriendRequests = async () => {
         try {
             console.log(userId)
-            const response = await axios.get(`http://172.29.148.167:8000/friend-request/${userId}`);
+            const response = await axios.get(`${API_BASE}friend-request/${userId}`);
             console.log(response.data)
             if (response.status === 200) {
                 setFriendRequests(response.data);
@@ -45,7 +47,7 @@ export default function AddFriend() {
     const fetchAllUsers = async () => {
         try {
             console.log("userId = ", userId);
-            const response = await axios.get(`http://172.29.148.167:8000/users/${userId}`);
+            const response = await axios.get(`${API_BASE}users/${userId}`);
             if (response.status === 200 && Array.isArray(response.data)) {
                 setAllUsers(response.data);
             } else {
@@ -59,7 +61,7 @@ export default function AddFriend() {
     const fetchUserFriends = async () => {
         try {
             console.log("fetchUserFriends = ", userId)
-            const response = await axios.get(`http://172.29.148.167:8000/friends/${userId}`);
+            const response = await axios.get(`${API_BASE}friends/${userId}`);
             if (response.status === 200) {
                 setUserFriends(response.data);
             }
@@ -75,7 +77,7 @@ export default function AddFriend() {
     return (
         <ScrollView className="flex-1">
             <StatusBar style="dark" />
-            <View style={{ paddingTop: hp(5), paddingHorizontal: wp(5) }} className="flex-1 gap-12">
+            <View style={{ paddingTop: hp(2), paddingHorizontal: wp(5) }} className="flex-1 gap-12">
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                     <TouchableOpacity onPress={() => setTab('invitations')}>
                         <Text style={{ fontSize: hp(3), color: tab === 'invitations' ? '#8177bb' : '#000' }}>Invitations</Text>

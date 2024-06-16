@@ -10,7 +10,9 @@ import { useAuth } from '../context/authContext';
 import { ModalPicker } from '../components/ModalPicker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+
 export default function signUp() {
+  const API_BASE = 'https://chatapp.ebg.tw/';
   const router = useRouter();
   const { register } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -31,7 +33,7 @@ export default function signUp() {
   // register user on db
   const registerUser = async (uid, email, name, profileURL) => {
     try {
-      const response = await fetch('http://172.29.148.167:8000/register', {
+      const response = await fetch(`${API_BASE}register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ export default function signUp() {
 
   const handleRegister = async () => {
     if (!profileRef.current) {
-      profileRef.current = '../assets/images/photo-stickers/1.png';
+      profileRef.current = 1;
     }
 
     if (!emailRef.current || !passwordRef.current || !usernameRef.current || !profileRef.current) {
